@@ -1,6 +1,3 @@
-<<<<<<< HEAD
-
-=======
 from pathlib import Path
 import sys
 """
@@ -114,4 +111,3 @@ print(f"Software files: {len(software_files)}")
 print(f"Db_json_csv_files: {len(db_json_csv_files)}")
 print(f"Unclassified files: {len(unclassified_files)}")
 print(f"Unclassified folders: {len(unclassified_folders)}")
->>>>>>> master
