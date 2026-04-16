@@ -1,5 +1,8 @@
 from pathlib import Path
 import sys
+import shutil
+import config
+
 """
 - finds extracted folders and deletes zip files for those folders
 - places images audio documents and video in their respective folders in the
@@ -80,7 +83,10 @@ for folder_name, file_list in category_map.items():
         folder_path.mkdir(exist_ok=True)
         
         for file in file_list:
+            file_path =  folder_path / file.name
             try:
+                if file_path.exists() and config.overwrite_existing_files:
+                    file_path.unlink()
                 file.rename(folder_path / file.name)
                 print(f"Moved: {file.name} → {folder_name}/")
             except Exception as e:
@@ -89,7 +95,7 @@ for folder_name, file_list in category_map.items():
 # Handle unclassified folders
 if unclassified_folders:
     unclassified_folder_path = target_path / 'unclassified_folders'
-    unclassified_folder_path.mkdir(exist_ok=True)
+    unclassified_folder_path.mkdir(exist_ok=True) # skip if exists (don't throw error)
     
     for folder in unclassified_folders:
         # Skip the newly created category folders
@@ -97,6 +103,8 @@ if unclassified_folders:
             try:
                 # Move folder into unclassified_folders
                 new_location = unclassified_folder_path / folder.name
+                if new_location.exists() and config.overwrite_existing_folders:
+                    shutil.rmtree(new_location)
                 folder.rename(new_location)
                 print(f"Moved folder: {folder.name} → unclassified_folders/")
             except Exception as e:
